@@ -1,0 +1,646 @@
+# Life in 2050 with Artificial Intelligence — Interactive Webpage
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life in 2050 with AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fbff;
+            color: #111827;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        ::selection {
+            background: #93c5fd;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(96, 165, 250, 0.22), transparent 70%);
+            z-index: -1;
+            filter: blur(20px);
+            animation: floatGlow 12s ease-in-out infinite;
+        }
+
+        .bg-glow:nth-child(1) {
+            top: -100px;
+            left: -150px;
+        }
+
+        .bg-glow:nth-child(2) {
+            bottom: -120px;
+            right: -120px;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatGlow {
+
+            0%,
+            100% {
+                transform: translateY(0px) translateX(0px);
+            }
+
+            50% {
+                transform: translateY(40px) translateX(20px);
+            }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        nav h1 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 22px;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #1f2937;
+            font-size: 0.95rem;
+            transition: 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 120px 8% 80px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero {
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .hero h2 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 850px;
+            font-size: 1.2rem;
+            color: #374151;
+        }
+
+        .scroll-indicator {
+            margin-top: 45px;
+            width: 32px;
+            height: 52px;
+            border: 2px solid #2563eb;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #2563eb;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scrollAnim 1.8s infinite;
+        }
+
+        @keyframes scrollAnim {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 0px);
+            }
+
+            40% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, 18px);
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            transform: translateY(40px);
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .card.visible {
+            transform: translateY(0px);
+            opacity: 1;
+        }
+
+        .card h3 {
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+            color: #111827;
+        }
+
+        .card p {
+            color: #4b5563;
+            font-size: 1rem;
+        }
+
+        .section-title {
+            position: absolute;
+            top: 40px;
+            left: 8%;
+        }
+
+        .section-title h2 {
+            font-size: 2.7rem;
+            margin-bottom: 8px;
+        }
+
+        .section-title span {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .image-card img {
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .video-section {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        iframe {
+            width: min(100%, 1000px);
+            height: 560px;
+            border: none;
+            border-radius: 28px;
+            margin-top: 35px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            max-width: 950px;
+            margin: auto;
+        }
+
+        .timeline-item {
+            background: white;
+            padding: 28px;
+            border-radius: 24px;
+            border-left: 5px solid #2563eb;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .quote {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #1f2937;
+            margin-top: 20px;
+        }
+
+        footer {
+            padding: 60px 8%;
+            text-align: center;
+            background: white;
+        }
+
+        footer p {
+            color: #6b7280;
+        }
+
+        .fade-up {
+            transform: translateY(60px);
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .fade-up.visible {
+            transform: translateY(0px);
+            opacity: 1;
+        }
+
+        @media(max-width: 900px) {
+            nav ul {
+                display: none;
+            }
+
+            iframe {
+                height: 300px;
+            }
+
+            .hero h2 {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow"></div>
+
+    <nav>
+        <h1>AI 2050</h1>
+        <ul>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#city">Smart Cities</a></li>
+            <li><a href="#health">Healthcare</a></li>
+            <li><a href="#future">Future Jobs</a></li>
+            <li><a href="#opinion">Opinion</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h2>Life in 2050<br>with Artificial Intelligence</h2>
+        <p>
+            Imagine a future where cities think, homes care for us, education adapts instantly,
+            and artificial intelligence becomes deeply integrated into human life.
+            This interactive experience explores what the world could look like in 2050.
+        </p>
+
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <section id="education">
+        <div class="section-title fade-up">
+            <span>Future Learning</span>
+            <h2>AI in Education</h2>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Tailored Learning Paths</h3>
+                <p>
+                    AI systems analyze student strengths, weaknesses and learning patterns in real time.
+                    Lessons dynamically adapt to match every student individually.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>24/7 AI Tutors</h3>
+                <p>
+                    Intelligent tutoring assistants provide instant explanations, simulations and practice.
+                    Quality education becomes globally accessible.
+                </p>
+            </div>
+
+            <div class="card image-card">
+                <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1200&auto=format&fit=crop"
+                    alt="Future classroom">
+                <h3>Immersive Classrooms</h3>
+                <p>
+                    Virtual reality and AI simulations could allow students to explore space, ancient civilizations,
+                    or microscopic biology directly from classrooms.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="city">
+        <div class="section-title fade-up">
+            <span>Urban Evolution</span>
+            <h2>Smart Cities</h2>
+        </div>
+
+        <div class="grid">
+            <div class="card image-card">
+                <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=1200&auto=format&fit=crop"
+                    alt="Smart city">
+                <h3>Energy Efficient Buildings</h3>
+                <p>
+                    AI-controlled infrastructure continuously adjusts energy use for lighting, transport,
+                    heating and cooling to reduce waste.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Predictive Maintenance</h3>
+                <p>
+                    Roads, bridges and utilities will be repaired before they fail using AI prediction systems,
+                    improving safety and reducing costs.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Autonomous Transportation</h3>
+                <p>
+                    Self-driving vehicles communicating with each other could significantly reduce accidents
+                    and improve traffic efficiency.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="health">
+        <div class="section-title fade-up">
+            <span>Human Wellbeing</span>
+            <h2>AI in Healthcare & Homes</h2>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Continuous Health Monitoring</h3>
+                <p>
+                    Smart wearable devices track vital signs 24/7 and alert doctors or caregivers instantly
+                    during emergencies.
+                </p>
+            </div>
+
+            <div class="card image-card">
+                <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1200&auto=format&fit=crop"
+                    alt="AI healthcare">
+                <h3>Virtual Medical Assistants</h3>
+                <p>
+                    AI healthcare systems may provide fast diagnosis support, medication reminders,
+                    and personalized treatment guidance.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Smart Homes</h3>
+                <p>
+                    Future homes could automatically recycle waste, manage energy consumption,
+                    improve security and support elderly care.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="future">
+        <div class="section-title fade-up">
+            <span>Work & Society</span>
+            <h2>Future Jobs</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item fade-up">
+                <h3>Human + AI Collaboration</h3>
+                <p>
+                    Future careers may focus more on creativity, innovation and strategic decision making,
+                    while AI handles repetitive tasks.
+                </p>
+            </div>
+
+            <div class="timeline-item fade-up">
+                <h3>AI Trainers & Ethics Experts</h3>
+                <p>
+                    Specialists will guide AI behavior, monitor fairness and ensure responsible use of advanced systems.
+                </p>
+            </div>
+
+            <div class="timeline-item fade-up">
+                <h3>Human Connection Careers</h3>
+                <p>
+                    Professions involving empathy such as counseling, healthcare and teaching will remain deeply
+                    valuable.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-section">
+        <div class="section-title fade-up"
+            style="position:relative; left:0; top:0; text-align:center; margin-bottom:20px;">
+            <span>Visual Exploration</span>
+            <h2>Future of AI Video</h2>
+        </div>
+
+        <p class="quote">
+            "Artificial intelligence will not just change technology. It will reshape how humans learn,
+            communicate, travel and live."
+        </p>
+
+        <iframe src="https://www.youtube.com/embed/2ePf9rue1Ao" title="Future of AI" allowfullscreen>
+        </iframe>
+    </section>
+
+    <section id="opinion">
+        <div class="section-title fade-up">
+            <span>Student Perspective</span>
+            <h2>My Opinion on the Future of AI</h2>
+        </div>
+
+        <div class="grid">
+            <div class="card" style="grid-column: 1/-1;">
+                <p>
+                    I believe artificial intelligence has the potential to improve humanity in extraordinary ways.
+                    It can make education more accessible, healthcare more effective and cities more efficient.
+                    However, I also think humans must remain responsible for how AI is developed and used.
+
+                    AI should assist human potential, not replace human values.
+                    Creativity, empathy, ethics and critical thinking will become even more important in the future.
+                    If society balances innovation with responsibility, AI could help create a safer, smarter and more
+                    connected world by 2050.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="student-form">
+        <div class="section-title fade-up">
+            <span>Community Predictions</span>
+            <h2>Share Your Vision of 2050</h2>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Student Opinion Form</h3>
+
+                <form id="predictionForm">
+                    <div style="margin-bottom:18px;">
+                        <label>Name</label><br><br>
+                        <input type="text" id="name" required placeholder="Enter your name"
+                            style="width:100%; padding:14px; border-radius:14px; border:1px solid #dbeafe; font-family:Inter;">
+                    </div>
+
+                    <div style="margin-bottom:18px;">
+                        <label>Your Prediction About AI in 2050</label><br><br>
+                        <textarea id="prediction" rows="6" required
+                            placeholder="What do you think life with AI will look like in 2050?"
+                            style="width:100%; padding:14px; border-radius:14px; border:1px solid #dbeafe; resize:none; font-family:Inter;"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        style="padding:14px 28px; border:none; border-radius:14px; background:#2563eb; color:white; font-size:1rem; cursor:pointer;">
+                        Submit Prediction
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Live Student Predictions</h3>
+
+                <div id="responses" style="display:flex; flex-direction:column; gap:18px; margin-top:20px;">
+                    <div style="padding:18px; background:#eff6ff; border-radius:16px;">
+                        <strong>Aarav</strong>
+                        <p style="margin-top:8px; color:#4b5563;">
+                            I think AI will remove language barriers completely and make global education available to
+                            everyone.
+                        </p>
+                    </div>
+
+                    <div style="padding:18px; background:#f5f3ff; border-radius:16px;">
+                        <strong>Diya</strong>
+                        <p style="margin-top:8px; color:#4b5563;">
+                            Smart cities will become cleaner and more energy efficient because AI will optimize
+                            everything automatically.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sources">
+        <div class="section-title fade-up">
+            <span>References</span>
+            <h2>Sources</h2>
+        </div>
+
+        <div class="card" style="width:100%; margin-top:120px;">
+            <p>BBC Future — https://www.bbc.com/news/articles/c865n800d5jo</p>
+            <br>
+            <p>Science Focus —
+                https://www.sciencefocus.com/future-technology/heres-what-2050-will-look-like-according-to-the-godfather-of-ai
+            </p>
+            <br>
+            <p>Dataleon AI — https://www.dataleon.ai/en/blog/exploring-the-future-of-ai-what-will-ai-be-in-2050</p>
+            <br>
+            <p>Images sourced from Unsplash and AI-generated visuals.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>
+            Designed by Himanshu Rathod • Inspired by future possibilities of Artificial Intelligence
+        </p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('predictionForm');
+        const responses = document.getElementById('responses');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const prediction = document.getElementById('prediction').value;
+
+            const entry = document.createElement('div');
+            entry.style.padding = '18px';
+            entry.style.background = '#ecfeff';
+            entry.style.borderRadius = '16px';
+
+            entry.innerHTML = `
+      <strong>${name}</strong>
+      <p style="margin-top:8px; color:#4b5563;">${prediction}</p>
+    `;
+
+            responses.prepend(entry);
+
+            form.reset();
+        });
+
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15
+        });
+
+        document.querySelectorAll('.card, .fade-up').forEach((el) => {
+            observer.observe(el);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            document.querySelectorAll('.bg-glow').forEach((glow, index) => {
+                glow.style.transform = `translateY(${scrolled * (0.04 + index * 0.02)}px)`;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
